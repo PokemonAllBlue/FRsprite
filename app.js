@@ -22,7 +22,7 @@ function convertSprite() {
     ctx.putImageData(imageData, 0, 0);
 
     extractPalette(imageData);
-    exportIndexedPNG(imageData);
+    exportIndexedPNG(imageData); // Final working download
 }
 
 // ----------------- COLOR REDUCTION -----------------
@@ -87,7 +87,7 @@ function extractPalette(imageData) {
     const colors = new Set();
 
     // Force transparency as palette index 0
-    colors.add("0,0,0"); 
+    colors.add("0,0,0");
 
     let data = imageData.data;
     for (let i = 0; i < data.length; i += 4) {
@@ -155,28 +155,28 @@ function updatePaletteOrder() {
     console.log("Palette Order:", paletteArray);
 }
 
-// ----------------- EXPORT INDEXED PNG -----------------
+// ----------------- EXPORT FIRE-RED INDEXED PNG -----------------
 function exportIndexedPNG(imageData) {
     const w = 64, h = 64;
     const rgba = new Uint8Array(imageData.data.buffer);
 
-    // Ensure palette index 0 = transparency
+    // Ensure transparency at index 0
     let palette16 = paletteArray.slice();
     if (!palette16[0]) palette16.unshift("0,0,0");
 
     const paletteRGB = palette16.map(c => c.split(",").map(n => parseInt(n)));
 
-    // Quantize to 16 colors indexed PNG using UPNG
-    const png = UPNG.quantize(rgba, w, h, paletteRGB);
+    // Quantize RGBA to indexed PNG
+    const pngBytes = UPNG.quantize(rgba, w, h, paletteRGB);
 
-    const blob = new Blob([png], { type: "image/png" });
+    // Create a blob for download
+    const blob = new Blob([pngBytes], { type: "image/png" });
     const url = URL.createObjectURL(blob);
 
     const dl = document.getElementById("download");
     dl.href = url;
+    dl.download = "firered_sprite.png";
 
-    // Revoke old object URL to avoid memory leaks
-    dl.onclick = e => {
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-    };
+    // Revoke object URL after download to avoid memory leaks
+    dl.onclick = () => setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
