@@ -1,0 +1,42 @@
+body{
+    background:#111;
+    color:white;
+    font-family:Arial;
+    text-align:center;
+    padding:20px;
+}
+
+button{
+    padding:12px;
+    font-size:18px;
+    margin:10px;
+    border:none;
+    background:#ff3b3b;
+    color:white;
+    border-radius:8px;
+}
+
+canvas{
+    border:3px solid white;
+    margin-top:15px;
+    image-rendering: pixelated;
+}
+
+#palette{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+.colorBox{
+    width:40px;
+    height:40px;
+    margin:4px;
+    border:2px solid white;
+    border-radius:6px;
+    cursor:grab;
+}
+
+.colorBox.dragging{
+    opacity:0.4;
+}
